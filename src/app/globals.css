@@ -1,0 +1,616 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #4fc3f7;
+  --secondary-color: #ba68c8;
+  --accent-color: #ff7043;
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(20, 20, 35, 0.85);
+  --text-primary: #e0e0e0;
+  --text-secondary: #9e9e9e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+/* Animated Stars Background */
+.stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Main Container */
+.game-container {
+  position: relative;
+  min-height: 100vh;
+  z-index: 1;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.energy-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.energy-icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  animation: glow 2s ease-in-out infinite;
+  text-shadow: 0 0 20px var(--primary-color);
+}
+
+@keyframes glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+.energy-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.energy-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.stats {
+  display: flex;
+  gap: 30px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Realm Badge */
+.realm-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 40px;
+  background: var(--bg-card);
+  border: 2px solid var(--primary-color);
+  border-radius: 50px;
+  margin: 0 auto 30px;
+  width: fit-content;
+}
+
+.realm-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.realm-multiplier {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Main Area Layout */
+.main-area {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .main-area {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Click Area */
+.click-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+  position: relative;
+}
+
+.cosmic-orb {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  user-select: none;
+}
+
+.cosmic-orb:hover {
+  transform: scale(1.05);
+}
+
+.cosmic-orb:active {
+  transform: scale(0.95);
+}
+
+.cosmic-orb.pulse {
+  animation: orbPulse 0.1s ease;
+}
+
+@keyframes orbPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.orb-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 255, 255, 0.9),
+    var(--realm-color) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: coreFloat 4s ease-in-out infinite;
+}
+
+@keyframes coreFloat {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.orb-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, 
+    transparent 30%,
+    var(--realm-color) 50%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.orb-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 2px solid var(--realm-color);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+.ring-1 {
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%) rotateX(60deg);
+  animation: ringRotate1 10s linear infinite;
+}
+
+.ring-2 {
+  width: 150%;
+  height: 150%;
+  transform: translate(-50%, -50%) rotateX(60deg) rotateZ(60deg);
+  animation: ringRotate2 15s linear infinite;
+}
+
+.ring-3 {
+  width: 180%;
+  height: 180%;
+  transform: translate(-50%, -50%) rotateX(60deg) rotateZ(-60deg);
+  animation: ringRotate3 20s linear infinite;
+}
+
+@keyframes ringRotate1 {
+  from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(0deg); }
+  to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg); }
+}
+
+@keyframes ringRotate2 {
+  from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(60deg); }
+  to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(420deg); }
+}
+
+@keyframes ringRotate3 {
+  from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(-60deg); }
+  to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(300deg); }
+}
+
+/* Particle Effects */
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* Click Effect */
+.click-effect {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: clickRipple 0.6s ease-out forwards;
+}
+
+@keyframes clickRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(5);
+    opacity: 0;
+  }
+}
+
+/* Floating Text */
+.floating-text {
+  position: absolute;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+  pointer-events: none;
+  animation: floatUp 1s ease-out forwards;
+  z-index: 100;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.click-hint {
+  margin-top: 30px;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Upgrades Panel */
+.upgrades-panel {
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.panel-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.upgrades-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.upgrade-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.upgrade-card:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary-color);
+  transform: translateX(5px);
+}
+
+.upgrade-card:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.upgrade-card.affordable {
+  border-color: rgba(79, 195, 247, 0.3);
+}
+
+.upgrade-card.affordable:hover {
+  box-shadow: 0 0 20px rgba(79, 195, 247, 0.2);
+}
+
+.upgrade-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.upgrade-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.upgrade-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.upgrade-cost {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent-color);
+}
+
+.cost-value {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+}
+
+.cost-label {
+  font-size: 0.9rem;
+}
+
+.upgrade-count {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Realms Progress */
+.realms-progress {
+  max-width: 1400px;
+  margin: 30px auto 0;
+  padding: 25px;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progress-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.realms-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.realm-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.realm-item.unlocked {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.realm-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  text-shadow: 0 0 10px currentColor;
+}
+
+.realm-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.realm-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.realm-requirement {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.progress-bar {
+  width: 100px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Scrollbar Styling */
+.upgrades-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.upgrades-panel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.upgrades-panel::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stats {
+    gap: 20px;
+  }
+
+  .cosmic-orb {
+    width: 200px;
+    height: 200px;
+  }
+
+  .realm-badge {
+    padding: 10px 25px;
+  }
+
+  .realm-name {
+    font-size: 1rem;
+  }
+
+  .realms-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .realm-item {
+    width: 100%;
+    max-width: 300px;
+  }
+}
